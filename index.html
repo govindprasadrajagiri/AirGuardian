@@ -28,7 +28,8 @@
     .then(data => {
         // Display output
         console.log(data)
-        document.getElementById('output').innerText = data.output;
+        // document.getElementById('output').innerText = data.output;
+        document.getElementById('output').innerText = data.myr;
     })
     .catch(error => {
         console.error('Error:', error);
