@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Colab Integration</title>
+</head>
+<body>
+  <button onclick="runColabNotebook()">Run Colab Notebook</button>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    // Client ID from Google Cloud Console
+    const CLIENT_ID = 'YOUR_CLIENT_ID';
+
+    // Scopes required for Google Drive and Google Colab APIs
+    const SCOPES = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive.scripts'];
+
+    // Load Google APIs
+    gapi.load('client:auth2', initClient);
+
+    async function initClient() {
+      await gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: SCOPES.join(' '),
+        discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", "https://colab.research.google.com/notebooks/colab-github-demo/colab-github-demo.ipynb"],
+      });
+    }
+
+    async function runColabNotebook() {
+      // Example: execute a Colab notebook
+      const resp = await gapi.client.drive.revisions.list({
+        'fileId': 'YOUR_COLAB_NOTEBOOK_FILE_ID'
+      });
+
+      const revisions = resp.result.revisions;
+      const lastRevision = revisions[revisions.length - 1];
+      const notebookContent = lastRevision.exportLinks['application/vnd.colab'];
+      
+      // Execute the notebook content or open it in Colab
+      console.log(notebookContent);
+    }
+  </script>
+</body>
+</html>
